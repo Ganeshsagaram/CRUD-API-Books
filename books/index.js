@@ -46,7 +46,7 @@ app.use(cors())
 
 app.use(bodyParser.json());
 
-const PORT=8080;
+const PORT=process.env.PORT_NUMBER||5000;
 
 
 const tempHoldOfData=[];

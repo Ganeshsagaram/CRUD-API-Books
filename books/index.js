@@ -55,23 +55,32 @@ const tempHoldOfData=[];
 //testing home route
 
 app.get("/",(req,res)=>{
-    // res.send("hi in get home route");
-    res.json({"msg":"hi"})
+    res.send("Hi");
+    // res.json({"msg":"hi"})
 });
 
 //get all books
 
 app.get("/get-all-books",async (req,res)=>{
-    const connection=await dbConnection()
-   
-    const hasData=await connection.db("Books_CRUD_API").collection("books").countDocuments()
-    if(hasData>0){
-        const theData=await connection.db("Books_CRUD_API").collection("books").find({}).toArray();
-        res.send(theData);
-        return;
-    }
-    res.status(400).send("No data available");
+    try {
+        const connection = await dbConnection();
+        const db = connection.db("Books_CRUD_API");
+        const collection = db.collection("books");
     
+        const hasData = await collection.find().toArray();
+        
+        if (hasData.length > 0) {
+            const theData = await collection.find().toArray();
+            res.send(theData);
+            return;
+        }
+        
+        res.status(400).send("No data available");
+    } catch (error) {
+        console.error("Database Error:", error); // Logs the exact error in the console
+        res.status(500).send("Internal Server Error: Unable to fetch data");
+    }
+      
     
 })
 
